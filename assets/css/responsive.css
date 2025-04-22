@@ -1,0 +1,35 @@
+/* assets/css/responsive.css */
+@media (max-width: 768px) {
+    nav ul {
+        flex-direction: column;
+        position: absolute;
+        top: 80px;
+        right: 0;
+        background-color: #1E325C;
+        width: 200px;
+        padding: 1rem;
+        display: none;
+    }
+    
+    nav ul li {
+        margin: 0.5rem 0;
+    }
+    
+    .picture-section, .picture-section.reverse {
+        flex-direction: column;
+    }
+    
+    .picture-box, .description-section {
+        flex-basis: 100%;
+    }
+    
+    .picture-box {
+        height: 200px;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+}
+
+/* Mobile menu toggle functionality will be added with JavaScript */

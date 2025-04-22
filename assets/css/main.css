@@ -1,0 +1,644 @@
+/* assets/css/main.css */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    overflow-x: hidden;
+    perspective: 1000px;
+}
+
+.background-container {
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    z-index: -1;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* Darker overlay */
+    z-index: 1;
+}
+
+#background-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    filter: blur(2px); /* Reduced blur */
+    transform: scale(1.05);
+}
+
+/* Enhanced Navigation Underline */
+.nav-item:after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 3px; /* Thicker line */
+    bottom: -5px;
+    left: 0; /* Start from left */
+    background: white;
+    transition: all 0.3s ease;
+    transform-origin: left;
+}
+
+.nav-item:hover:after {
+    width: 100%; /* Full width of text */
+}
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    transition: all 0.3s ease;
+    background: rgba(30, 50, 92, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+header.scrolled {
+    padding: 1rem 2rem;
+    background: rgba(30, 50, 92, 0.95);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    height: 50px;
+    transition: all 0.3s ease;
+}
+
+header.scrolled .logo {
+    height: 40px;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+}
+
+.nav-item {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    margin: 0 0.5rem;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.language-btn {
+    background: #1E325C; /* Darker blue background for better text visibility */
+    color: white; /* White text for better visibility */
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 1rem;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle border */
+}
+
+.language-btn:hover {
+    background: #2a4a8a; /* Lighter blue on hover */
+    transform: translateY(-2px);
+}
+
+main {
+    padding: 0;
+    margin: 0 auto;
+    min-height: calc(100vh - 80px);
+    color: #333;
+}
+
+/* Hero Section */
+.hero-section {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-content {
+    z-index: 2;
+    transform-style: preserve-3d;
+}
+
+.animate-title {
+    font-size: 4rem;
+    font-weight: 800;
+    margin-bottom: 2rem;
+    color: white;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+    transform: translateZ(50px);
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0) translateZ(50px);
+    }
+    50% {
+        transform: translateY(-20px) translateZ(50px);
+    }
+}
+
+.scroll-indicator {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    animation: bounce 2s infinite;
+}
+
+.mouse {
+    width: 30px;
+    height: 50px;
+    border: 2px solid white;
+    border-radius: 15px;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.wheel {
+    width: 6px;
+    height: 10px;
+    background: white;
+    border-radius: 3px;
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: scroll 1.5s infinite;
+}
+
+@keyframes scroll {
+    0% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(15px);
+    }
+}
+
+.arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    font-size: 0.8rem;
+}
+
+.arrow i {
+    margin-top: 8px;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Info Section - Changed background to light blue */
+.info-section {
+    padding: 6rem 0;
+    background: #e6f0fa; /* Light blue background instead of white */
+    position: relative;
+}
+
+.section-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 3rem;
+    color: #1E325C;
+    position: relative;
+}
+
+.section-title:after {
+    content: '';
+    position: absolute;
+    width: 80px;
+    height: 3px;
+    background: #1E325C;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.info-box {
+    background-color: rgba(255, 255, 255, 0.6); /* More transparent white */
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.5s ease;
+    transform: perspective(1000px) rotateX(0deg);
+    border-left: 3px solid #1E325C; /* Blue accent border */
+}
+
+.info-box:hover {
+    transform: perspective(1000px) rotateX(5deg);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.info-content {
+    display: flex;
+    padding: 3rem;
+    align-items: center;
+}
+
+.info-icon {
+    font-size: 3rem;
+    color: #1E325C;
+    margin-right: 2rem;
+}
+
+.service-description {
+    line-height: 1.8;
+    font-size: 1.1rem;
+}
+
+/* Feature Sections with alternating layouts and blue backgrounds */
+.feature-section {
+    padding: 6rem 0;
+    position: relative;
+}
+
+/* Alternate backgrounds for feature sections */
+.feature-section:nth-child(odd):not(.blue-section) {
+    background: #edf5fc; /* Very light blue instead of white/gray */
+}
+
+.feature-section:nth-child(even):not(.blue-section) {
+    background: #d9e8f7; /* Slightly darker light blue */
+}
+
+.blue-section {
+    background: linear-gradient(135deg, #1E325C 0%, #2a4a8a 100%);
+    color: white;
+}
+
+.blue-section .section-title,
+.blue-section h2,
+.blue-section p {
+    color: white;
+}
+
+.blue-section .description-section h2:after {
+    background: white;
+}
+
+/* Enhanced styling for feature sections */
+.feature-section.blue-section .description-section {
+    background: rgba(255, 255, 255, 0.15); /* Slightly transparent white */
+    padding: 2rem;
+    border-radius: 15px;
+    backdrop-filter: blur(5px);
+}
+
+.feature-section:not(.blue-section) .description-section {
+    background: rgba(30, 50, 92, 0.05); /* Very light blue tint */
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.feature-card {
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+}
+
+/* This is already in your original CSS - maintaining the alternating layout */
+.feature-card.reverse {
+    flex-direction: row-reverse;
+}
+
+.picture-box {
+    flex: 1;
+    height: 400px;
+    overflow: hidden;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.5s ease;
+    transform: perspective(1000px) rotateY(0deg);
+}
+
+.feature-card:hover .picture-box {
+    transform: perspective(1000px) rotateY(-5deg);
+}
+
+.feature-card.reverse:hover .picture-box {
+    transform: perspective(1000px) rotateY(5deg);
+}
+
+.picture-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all 0.5s ease;
+}
+
+.feature-card:hover .picture-box img {
+    transform: scale(1.05);
+}
+
+.description-section {
+    flex: 1;
+}
+
+.description-section h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #1E325C;
+    position: relative;
+}
+
+.description-section h2:after {
+    content: '';
+    position: absolute;
+    width: 60px;
+    height: 3px;
+    background: #1E325C;
+    bottom: -10px;
+    left: 0;
+}
+
+.description-section p {
+    line-height: 1.8;
+    font-size: 1.1rem;
+}
+
+/* Status Page Styles */
+.status-section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    background: linear-gradient(45deg, #1E325C 0%, #2a4a8a 100%);
+}
+
+.status-container {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 3rem;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    max-width: 600px;
+    width: 100%;
+    transform: translateY(0);
+    transition: transform 0.3s ease;
+}
+
+.status-container:hover {
+    transform: translateY(-5px);
+}
+
+.status-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-title {
+    text-align: center;
+    color: #1E325C;
+    font-size: 2.2rem;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.form-title:after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: #1E325C;
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.input-group input:focus {
+    border-color: #1E325C;
+    box-shadow: 0 0 10px rgba(30, 50, 92, 0.2);
+}
+
+.input-group label {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: white;
+    padding: 0 0.5rem;
+    color: #666;
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.input-group input:focus ~ label,
+.input-group input:not(:placeholder-shown) ~ label {
+    top: 0;
+    font-size: 0.9rem;
+    color: #1E325C;
+}
+
+.check-status-btn {
+    background: linear-gradient(45deg, #1E325C, #2a4a8a);
+    color: white;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.check-status-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(30, 50, 92, 0.3);
+}
+
+/* Footer with enhanced blue background */
+footer {
+    background: #1E325C;
+    color: white;
+    padding: 0;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.footer-column h3 {
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.footer-column h3:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 2px;
+    background: white;
+}
+
+.footer-links {
+    list-style: none;
+}
+
+.footer-links li {
+    margin-bottom: 1rem;
+}
+
+.footer-links a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+.footer-links i {
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+}
+
+.emergency-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+.emergency-number {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.8rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.emergency-number:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.emergency-number i {
+    font-size: 1.5rem;
+    margin-right: 1rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.emergency-number span {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.emergency-number p {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: white;
+}
+
+.copyright {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1.5rem;
+    text-align: center;
+    font-size: 0.9rem;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+/* --- Aesthetic Enhancements --- */
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+.fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 1s ease, transform 1s ease;
+}
+.fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
