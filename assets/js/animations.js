@@ -1,11 +1,9 @@
-// assets/js/animations.js
-
 document.addEventListener('DOMContentLoaded', function() {
-    // Register GSAP ScrollTrigger plugin
+    // Register GSAP plugins
     gsap.registerPlugin(ScrollTrigger);
-    
-    // Header animation on scroll
-    const header = document.querySelector('header');
+
+    // Animate the header on scroll
+    const header = document.getElementById('main-header');
     window.addEventListener('scroll', () => {
         if (window.scrollY > 50) {
             header.classList.add('scrolled');
@@ -14,121 +12,123 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // 3D Parallax effect for hero section
-    const heroSection = document.querySelector('.hero-section');
-    const heroTitle = document.querySelector('.animate-title');
-    
-    heroSection.addEventListener('mousemove', (e) => {
-        const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
-        const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
-        
-        heroTitle.style.transform = `translateZ(50px) rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-    });
-    
-    // Reset transform when mouse leaves
-    heroSection.addEventListener('mouseleave', () => {
-        heroTitle.style.transform = 'translateZ(50px)';
+    // Scroll progress indicator
+    const scrollProgress = document.querySelector('.scroll-progress-bar');
+    window.addEventListener('scroll', () => {
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrollPercent = scrollTop / scrollHeight * 100;
+        scrollProgress.style.width = scrollPercent + '%';
     });
 
-    // Scroll animations using GSAP
-    // Fade in animation for sections
-    gsap.utils.toArray('.section-container').forEach(section => {
-        gsap.fromTo(section, 
-            { y: 50, opacity: 0 }, 
-            {
-                y: 0,
-                opacity: 1,
-                duration: 1,
-                scrollTrigger: {
-                    trigger: section,
-                    start: "top 80%",
-                    toggleActions: "play none none none"
-                }
-            }
+    // Menu toggle functionality
+    const menuToggle = document.querySelector('.menu-toggle');
+    const mobileMenu = document.querySelector('.mobile-menu');
+
+    menuToggle.addEventListener('click', () => {
+        menuToggle.classList.toggle('active');
+        mobileMenu.classList.toggle('active');
+        document.body.classList.toggle('menu-open');
+    });
+
+    // Ensure mobile language toggle works
+    const mobileLangToggle = document.getElementById('mobile-language-toggle');
+    mobileLangToggle.addEventListener('click', function() {
+        // Trigger the same function as the main language toggle
+        document.getElementById('language-toggle').click();
+        // Update mobile button text
+        this.textContent = this.getAttribute(
+            document.documentElement.lang === 'en' ? 'data-fr' : 'data-en'
         );
     });
 
-    // 3D tilt effect for feature cards
-    const featureCards = document.querySelectorAll('.feature-card');
-    
-    featureCards.forEach(card => {
-        card.addEventListener('mousemove', function(e) {
-            const rect = this.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            const xPercent = x / rect.width;
-            const yPercent = y / rect.height;
-            
-            const xRotation = (yPercent - 0.5) * 10;
-            const yRotation = (0.5 - xPercent) * 10;
-            
-            this.style.transform = `perspective(1000px) rotateX(${xRotation}deg) rotateY(${yRotation}deg)`;
-        });
-        
-        card.addEventListener('mouseleave', function() {
-            this.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+    // Hero content animation
+    gsap.to('.about-content', {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: "power3.out",
+        delay: 0.5
+    });
+
+    // Animate the about cards
+    gsap.utils.toArray('.about-card').forEach((card, index) => {
+        gsap.from(card, {
+            scrollTrigger: {
+                trigger: card,
+                start: 'top 80%'
+            },
+            opacity: 0,
+            y: 50,
+            duration: 0.8,
+            ease: "power3.out",
+            delay: index * 0.2
         });
     });
 
-    // Smooth scroll to sections
-    document.querySelectorAll('.nav-item').forEach(link => {
-        link.addEventListener('click', function(e) {
-            const href = this.getAttribute('href');
-            
-            if (href === 'index.html') {
-                e.preventDefault();
+    // Timeline animation
+    gsap.utils.toArray('.timeline-item').forEach((item, index) => {
+        gsap.from(item, {
+            scrollTrigger: {
+                trigger: item,
+                start: 'top 85%'
+            },
+            opacity: 0,
+            x: index % 2 === 0 ? -50 : 50,
+            duration: 0.8,
+            ease: "power3.out"
+        });
+    });
+
+    // Testimonial slider functionality
+    const testimonials = document.querySelectorAll('.testimonial');
+    const dots = document.querySelectorAll('.dot');
+    const prevBtn = document.querySelector('.prev-btn');
+    const nextBtn = document.querySelector('.next-btn');
+    let currentIndex = 0;
+
+    function showTestimonial(index) {
+        testimonials.forEach((testimonial, i) => {
+            testimonial.style.display = i === index ? 'block' : 'none';
+        });
+
+        dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === index);
+        });
+    }
+
+    prevBtn.addEventListener('click', () => {
+        currentIndex = (currentIndex - 1 + testimonials.length) % testimonials.length;
+        showTestimonial(currentIndex);
+    });
+
+    nextBtn.addEventListener('click', () => {
+        currentIndex = (currentIndex + 1) % testimonials.length;
+        showTestimonial(currentIndex);
+    });
+
+    dots.forEach((dot, i) => {
+        dot.addEventListener('click', () => {
+            currentIndex = i;
+            showTestimonial(currentIndex);
+        });
+    });
+
+    // Initialize testimonial slider
+    showTestimonial(currentIndex);
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
                 window.scrollTo({
-                    top: 0,
+                    top: target.offsetTop - 80,
                     behavior: 'smooth'
                 });
             }
         });
     });
-
-    // 3D tilt effect for the info box
-    const infoBox = document.querySelector('.info-box');
-    
-    if (infoBox) {
-        infoBox.addEventListener('mousemove', function(e) {
-            const rect = this.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            const xPercent = x / rect.width;
-            const yPercent = y / rect.height;
-            
-            const xRotation = (yPercent - 0.5) * 5;
-            const yRotation = (0.5 - xPercent) * 5;
-            
-            this.style.transform = `perspective(1000px) rotateX(${xRotation}deg) rotateY(${yRotation}deg)`;
-        });
-        
-        infoBox.addEventListener('mouseleave', function() {
-            this.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
-        });
-    }
-
-    // Fix existing language toggle functionality
-    const languageToggle = document.getElementById('language-toggle');
-    const translateElements = document.querySelectorAll('.translate');
-    
-    if (languageToggle) {
-        languageToggle.addEventListener('click', function() {
-            const currentLanguage = this.getAttribute('data-current') || 'en';
-            const newLanguage = currentLanguage === 'en' ? 'fr' : 'en';
-            
-            // Toggle language for all elements
-            translateElements.forEach(element => {
-                const translation = element.getAttribute(`data-${newLanguage}`);
-                if (translation) {
-                    element.innerText = translation;
-                }
-            });
-            
-            // Update language button text
-            this.innerText = this.getAttribute(`data-${newLanguage}`);
-            this.setAttribute('data-current', newLanguage);
-        });
-    }
 });
