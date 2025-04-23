@@ -1,59 +1,103 @@
+// main.js - Main functionality for Rwanda Police SPS Portal
+
 document.addEventListener('DOMContentLoaded', function() {
-    // Header scroll effect
-    const header = document.querySelector('header');
-    const videoContainer = document.querySelector('.video-container');
-    
-    window.addEventListener('scroll', function() {
-        if (window.scrollY > 50) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
-        }
-    });
-    
-    // Mobile menu toggle
-    const menuToggle = document.querySelector('.menu-toggle');
+    // Mobile navigation toggle
+    const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
     const navLinks = document.querySelector('.nav-links');
     
-    if (menuToggle) {
-        menuToggle.addEventListener('click', function() {
+    if (mobileNavToggle) {
+        mobileNavToggle.addEventListener('click', function() {
+            mobileNavToggle.classList.toggle('active');
             navLinks.classList.toggle('active');
-            menuToggle.classList.toggle('active');
         });
     }
     
-    // Close menu when clicking outside
+    // Close mobile nav when clicking outside
     document.addEventListener('click', function(event) {
-        const isClickInsideMenu = navLinks && navLinks.contains(event.target);
-        const isClickOnToggle = menuToggle && menuToggle.contains(event.target);
-        
-        if (!isClickInsideMenu && !isClickOnToggle && navLinks && navLinks.classList.contains('active')) {
-            navLinks.classList.remove('active');
-            menuToggle.classList.remove('active');
+        if (navLinks && navLinks.classList.contains('active')) {
+            if (!event.target.closest('nav')) {
+                navLinks.classList.remove('active');
+                if (mobileNavToggle) {
+                    mobileNavToggle.classList.remove('active');
+                }
+            }
         }
     });
     
-    // Only play video on homepage
-    if (videoContainer && window.location.pathname.includes('index.html') || window.location.pathname === '/') {
-        const video = videoContainer.querySelector('video');
-        if (video) {
-            video.play();
-        }
-    }
+    // Search functionality
+    const searchToggle = document.querySelector('.search-toggle');
+    const searchForm = document.querySelector('.search-form');
     
-    // Initialize GSAP animations
-    if (typeof gsap !== 'undefined') {
-        // Fade in elements on scroll
-        gsap.utils.toArray('.fade-in').forEach(element => {
-            gsap.from(element, {
-                scrollTrigger: {
-                    trigger: element,
-                    start: 'top 80%',
-                },
-                opacity: 0,
-                y: 30,
-                duration: 0.8
-            });
+    if (searchToggle && searchForm) {
+        searchToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            searchForm.classList.toggle('active');
         });
     }
+    
+    // Service card hover effects
+    const serviceCards = document.querySelectorAll('.service-card');
+    serviceCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.classList.add('hover');
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.classList.remove('hover');
+        });
+    });
+    
+    // Form validation for status check
+    const statusForm = document.querySelector('.status-form');
+    if (statusForm) {
+        statusForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const referenceInput = document.querySelector('#reference-number');
+            
+            if (referenceInput && referenceInput.value.trim() === '') {
+                alert('Please enter a valid reference number');
+                return false;
+            }
+            
+            // For demo purposes - would normally submit to server
+            alert('Status check successful! Your request is being processed.');
+        });
+    }
+    
+    // Input label animation
+    const formInputs = document.querySelectorAll('.input-group input');
+    formInputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.classList.add('focused');
+        });
+        
+        input.addEventListener('blur', function() {
+            if (this.value === '') {
+                this.parentElement.classList.remove('focused');
+            }
+        });
+        
+        // Check on load if inputs have values
+        if (input.value !== '') {
+            input.parentElement.classList.add('focused');
+        }
+    });
+    
+    // Set up smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                window.scrollTo({
+                    top: targetElement.offsetTop - 100,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
 });

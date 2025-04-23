@@ -38,13 +38,19 @@
     <main>
         <section class="status-section">
             <div class="status-container glass-box">
-                <h1 class="status-title translate" data-en="Check Case Status" data-fr="Vérifier l'état du dossier">
-                    <i class="fas fa-search-location"></i> Check Case Status
+                <h1 class="status-title translate" data-en="Track Your Case Status" data-fr="Suivre l'état du dossier">
+                    <i class="fas fa-search-location"></i> Track Your Case Status
                 </h1>
+                
+                <div class="welcome-text">
+                    <p class="translate" data-en="We're committed to keeping you informed throughout your case process. Enter your details below to check your current status." data-fr="Nous nous engageons à vous tenir informé tout au long du processus de votre dossier. Entrez vos coordonnées ci-dessous pour vérifier votre statut actuel.">
+                        We're committed to keeping you informed throughout your case process. Enter your details below to check your current status.
+                    </p>
+                </div>
                 
                 <form id="status-form" class="floating-form">
                     <div class="input-group">
-                        <input type="text" id="case-number" class="modern-input" required>
+                        <input type="text" id="case-number" class="modern-input" placeholder=" ">
                         <label for="case-number" class="translate" data-en="Case ID" data-fr="Numéro de dossier">
                             <i class="fas fa-file-alt"></i> Case ID
                         </label>
@@ -52,11 +58,20 @@
                     </div>
 
                     <div class="input-group">
-                        <input type="text" id="id-number" class="modern-input" required>
-                        <label for="id-number" class="translate" data-en="Phone Number" data-fr="Numéro de Telephone">
-                            <i class="fas fa-id-card"></i> Phone Number
+                        <input type="tel" id="id-number" class="modern-input" placeholder=" " required>
+                        <label for="id-number" class="translate" data-en="Phone Number <span class='required'>*</span>" data-fr="Numéro de Téléphone <span class='required'>*</span>">
+                            <i class="fas fa-phone"></i> Phone Number <span class="required">*</span>
                         </label>
                         <div class="input-border"></div>
+                        <small class="help-text translate" data-en="Enter the phone number you provided during case registration" data-fr="Entrez le numéro de téléphone que vous avez fourni lors de l'enregistrement du dossier">
+                            Enter the phone number you provided during case registration
+                        </small>
+                    </div>
+
+                    <div class="field-note">
+                        <p class="translate" data-en="<span class='required'>*</span> Required fields" data-fr="<span class='required'>*</span> Champs obligatoires">
+                            <span class="required">*</span> Required fields
+                        </p>
                     </div>
 
                     <button type="submit" class="gradient-btn translate" 
@@ -145,10 +160,9 @@
         </div>
     </footer>
 
-    <!-- Add this CSS to your main.css file -->
     <style>
         .status-section {
-            min-height: 100vh;
+            min-height: auto; /* Changed from 100vh to auto */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -156,19 +170,19 @@
             background: linear-gradient(45deg, #1E325Cdd, #2a4a8add);
         }
 
-        .glass-box {
+        .glass-box, .status-container {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(12px);
             border-radius: 20px;
             padding: 3rem;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 500px;
+            max-width: 800px; /* Increased from 550px to 800px */
             transform: translateY(0);
             transition: all 0.3s ease;
         }
 
-        .glass-box:hover {
+        .glass-box:hover, .status-container:hover {
             transform: translateY(-5px);
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
         }
@@ -176,12 +190,20 @@
         .status-title {
             color: #1E325C;
             font-size: 2.2rem;
-            margin-bottom: 2.5rem;
+            margin-bottom: 1rem;
             text-align: center;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 1rem;
+        }
+
+        .welcome-text {
+            text-align: center;
+            color: #555;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            line-height: 1.6;
         }
 
         .floating-form {
@@ -269,6 +291,41 @@
 
         .gradient-btn i {
             font-size: 1.2rem;
+        }
+
+        /* Additional styles */
+        .required {
+            color: #e74c3c;
+            font-weight: bold;
+            margin-left: 3px;
+        }
+
+        .help-text {
+            position: absolute;
+            bottom: -22px;
+            left: 0;
+            font-size: 0.85rem;
+            color: #777;
+        }
+
+        .field-note {
+            margin-top: -1rem;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+            color: #777;
+        }
+
+        /* Removed the .help-box class and its styles as requested */
+
+        @media (max-width: 850px) {
+            .glass-box, .status-container {
+                padding: 2rem;
+                max-width: 90%;
+            }
+            
+            .status-title {
+                font-size: 1.8rem;
+            }
         }
     </style>
 

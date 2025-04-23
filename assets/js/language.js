@@ -1,37 +1,48 @@
-// assets/js/language.js
+// language.js - Language switching functionality
+
 document.addEventListener('DOMContentLoaded', function() {
+    // Language toggle functionality
     const languageToggle = document.getElementById('language-toggle');
+    let currentLanguage = 'en'; // Default language
     
-    // Check if there's a saved language preference
-    let currentLanguage = localStorage.getItem('language') || 'en';
-    
-    // Initialize with saved preference
-    changeLanguage(currentLanguage);
-    
-    // Function to change language
-    function changeLanguage(language) {
-        const elements = document.querySelectorAll('.translate');
-        
-        elements.forEach(element => {
-            if (element.dataset[language]) {
-                element.textContent = element.dataset[language];
-            }
+    if (languageToggle) {
+        languageToggle.addEventListener('click', function() {
+            // Toggle between English and French
+            currentLanguage = currentLanguage === 'en' ? 'fr' : 'en';
+            
+            // Update all translatable elements
+            document.querySelectorAll('.translate').forEach(function(element) {
+                const translation = element.getAttribute(`data-${currentLanguage}`);
+                if (translation) {
+                    element.textContent = translation;
+                }
+            });
+            
+            // Update button text
+            languageToggle.textContent = languageToggle.getAttribute(`data-${currentLanguage}`);
+            
+            // Store language preference in local storage
+            localStorage.setItem('preferredLanguage', currentLanguage);
         });
         
-        // Update button text
-        languageToggle.textContent = languageToggle.dataset[language];
-        
-        // Update HTML lang attribute
-        document.documentElement.lang = language;
-        
-        // Store the current language in local storage
-        localStorage.setItem('language', language);
-        currentLanguage = language;
+        // Check if user has a stored language preference
+        const storedLanguage = localStorage.getItem('preferredLanguage');
+        if (storedLanguage && (storedLanguage === 'en' || storedLanguage === 'fr')) {
+            // If stored language is different from current, trigger a language change
+            if (storedLanguage !== currentLanguage) {
+                currentLanguage = storedLanguage;
+                
+                // Update all translatable elements
+                document.querySelectorAll('.translate').forEach(function(element) {
+                    const translation = element.getAttribute(`data-${currentLanguage}`);
+                    if (translation) {
+                        element.textContent = translation;
+                    }
+                });
+                
+                // Update button text
+                languageToggle.textContent = languageToggle.getAttribute(`data-${currentLanguage}`);
+            }
+        }
     }
-
-    // Event listener for language toggle button
-    languageToggle.addEventListener('click', function() {
-        const newLanguage = currentLanguage === 'en' ? 'fr' : 'en';
-        changeLanguage(newLanguage);
-    });
 });
