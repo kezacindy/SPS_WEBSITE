@@ -9,8 +9,6 @@
     <link rel="stylesheet" href="../assets/css/footer.css">
     <link rel="stylesheet" href="../assets/css/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Using intl-tel-input library for phone inputs with country flags -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css">
 </head>
 <body>
     <div class="background-container">
@@ -45,25 +43,18 @@
                 </h1>
                 
                 <div class="welcome-text">
-                    <p class="translate" data-en="We're committed to keeping you informed throughout your case process. Enter your details below to check your current status." data-fr="Nous nous engageons à vous tenir informé tout au long du processus de votre dossier. Entrez vos coordonnées ci-dessous pour vérifier votre statut actuel.">
-                        We're committed to keeping you informed throughout your case process. Enter your details below to check your current status.
+                    <p class="translate" data-en="We're committed to keeping you informed throughout your case process. Enter your case ID below to check your current status." data-fr="Nous nous engageons à vous tenir informé tout au long du processus de votre dossier. Entrez votre numéro de dossier ci-dessous pour vérifier votre statut actuel.">
+                        We're committed to keeping you informed throughout your case process. Enter your case ID below to check your current status.
                     </p>
                 </div>
                 
                 <form id="status-form" class="floating-form" novalidate>
                     <div class="form-field">
-                        <label for="case-number">Case ID</label>
+                        <label for="case-number" class="required-label">Case ID</label>
                         <div class="input-wrapper">
-                            <input type="text" id="case-number" placeholder="Enter your case identification number">
+                            <input type="text" id="case-number" placeholder="Enter your case identification number" required>
                         </div>
-                    </div>
-
-                    <div class="form-field" id="phone-container">
-                        <label for="phone" class="required-label">Phone number</label>
-                        <div class="phone-input-wrapper">
-                            <input type="tel" id="phone" class="phone-input" required>
-                        </div>
-                        <div class="error-message" id="phone-error">Please enter a valid phone number</div>
+                        <div class="error-message" id="case-error">Please enter a valid case ID</div>
                     </div>
 
                     <button type="submit" class="gradient-btn translate" 
@@ -72,6 +63,42 @@
                         <i class="fas fa-search"></i> Check Status
                     </button>
                 </form>
+                
+                <!-- Loading indicator -->
+                <div id="loading-indicator" class="loading-spinner" style="display:none;">
+                    <div class="spinner"></div>
+                    <p class="translate" data-en="Searching for your case..." data-fr="Recherche de votre dossier...">Searching for your case...</p>
+                </div>
+                
+                <!-- Results section (initially hidden) -->
+                <div id="results-container" class="results-section" style="display:none;">
+                    <h2 class="results-title">
+                        <i class="fas fa-clipboard-list"></i> 
+                        <span class="translate" data-en="Case Results" data-fr="Résultats du dossier">Case Results</span>
+                    </h2>
+                    
+                    <div id="no-results-message" style="display:none;">
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p class="translate" data-en="No case found matching your information. Please verify your case ID and try again." 
+                               data-fr="Aucun dossier trouvé correspondant à vos informations. Veuillez vérifier votre numéro de dossier et réessayer.">
+                                No case found matching your information. Please verify your case ID and try again.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div id="error-message" style="display:none;">
+                        <div class="alert alert-danger">
+                            <i class="fas fa-times-circle"></i>
+                            <p class="translate" data-en="An error occurred while retrieving your case information. Please try again later."
+                               data-fr="Une erreur s'est produite lors de la récupération des informations de votre dossier. Veuillez réessayer plus tard.">
+                                An error occurred while retrieving your case information. Please try again later.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div id="results-list"></div>
+                </div>
             </div>
         </section>
     </main>
@@ -320,28 +347,6 @@
             color: #9ca3af;
         }
 
-        /* IntlTelInput specific styles */
-        .phone-input-wrapper {
-            width: 100%;
-            max-width: 550px; /* Increased width for phone input */
-            margin: 0 auto;
-        }
-
-        .iti {
-            width: 100%;
-            margin-bottom: 10px;
-        }
-
-        .iti__flag {
-            background-image: url("https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/img/flags.png");
-        }
-
-        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-            .iti__flag {
-                background-image: url("https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/img/flags@2x.png");
-            }
-        }
-
         /* Error message */
         .error-message {
             color: #e74c3c;
@@ -396,6 +401,163 @@
             font-size: 1.2rem;
         }
 
+        /* Loading spinner */
+        .loading-spinner {
+            text-align: center;
+            margin: 2rem auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(30, 50, 92, 0.2);
+            border-radius: 50%;
+            border-top-color: #1E325C;
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Results section */
+        .results-section {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .results-title {
+            color: #1E325C;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .results-title i {
+            color: #2a4a8a;
+        }
+
+        /* Alert styles */
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .alert i {
+            font-size: 1.5rem;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border-left: 4px solid #ffc107;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+
+        /* Case card styles */
+        .case-card {
+            background-color: #f8fafc;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid #1E325C;
+            transition: all 0.2s ease;
+        }
+
+        .case-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .case-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .case-id {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1E325C;
+        }
+
+        .case-status {
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .status-inprogress{
+            background-color: #cfe2ff;
+            color: #084298;
+        }
+
+        .status-resolved {
+            background-color: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .status-closed {
+            background-color: #e2e3e5;
+            color: #41464b;
+        }
+
+        .case-details {
+            margin-top: 1rem;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-label {
+            font-weight: 500;
+            min-width: 120px;
+            color: #6b7280;
+        }
+
+        .detail-value {
+            color: #111827;
+        }
+
+        .case-description {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .case-description h4 {
+            color: #1E325C;
+            margin-bottom: 0.5rem;
+        }
+
         /* Improved responsiveness */
         @media (max-width: 850px) {
             .glass-box, .status-container {
@@ -431,62 +593,189 @@
             .input-wrapper, .phone-input-wrapper {
                 max-width: 100%;
             }
+            
+            .case-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
         }
     </style>
-
-    <!-- Add the intl-tel-input library script -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('status-form');
-            const phoneInput = document.getElementById('phone');
-            const phoneContainer = document.getElementById('phone-container');
+            const caseNumberInput = document.getElementById('case-number');
+            const caseNumberField = caseNumberInput.closest('.form-field');
+            const loadingIndicator = document.getElementById('loading-indicator');
+            const resultsContainer = document.getElementById('results-container');
+            const noResultsMessage = document.getElementById('no-results-message');
+            const errorMessage = document.getElementById('error-message');
+            const resultsList = document.getElementById('results-list');
             
-            // Initialize intl-tel-input
-            const iti = window.intlTelInput(phoneInput, {
-                utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js",
-                separateDialCode: true,
-                initialCountry: "us",
-                preferredCountries: ["us", "gb", "ca", "fr"],
-                autoPlaceholder: "polite"
-            });
-            
-            // Form validation
+            // Form validation and submission
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
                 
                 // Reset error states
-                phoneContainer.classList.remove('error');
+                caseNumberField.classList.remove('error');
                 
-                // Validate phone number using the library's validation
-                if (!phoneInput.value.trim() || !iti.isValidNumber()) {
-                    phoneContainer.classList.add('error');
-                    document.getElementById('phone-error').textContent = iti.getValidationError() === 0 
-                        ? "Please enter a valid phone number" 
-                        : iti.getValidationError() === 2 
-                            ? "Phone number is too short" 
-                            : "Invalid phone number";
+                // Validate case number
+                const caseNumber = caseNumberInput.value.trim();
+                if (!caseNumber) {
+                    caseNumberField.classList.add('error');
+                    document.getElementById('case-error').textContent = "Please enter a valid case ID";
                     return;
                 }
                 
-                // If validation passes, form would be submitted
-                // In a real scenario, you'd get the full number with international code:
-                const fullNumber = iti.getNumber(); // E.164 format
-                console.log("Full number with country code:", fullNumber);
+                // Reset results section
+                resultsContainer.style.display = 'none';
+                noResultsMessage.style.display = 'none';
+                errorMessage.style.display = 'none';
+                resultsList.innerHTML = '';
                 
-                alert('Form validated successfully! Phone: ' + fullNumber);
+                // Show loading indicator
+                loadingIndicator.style.display = 'flex';
+                
+                // Fetch data from API
+                fetchCaseData(caseNumber);
             });
             
             // Update validation on change
-            phoneInput.addEventListener('change', validatePhone);
-            phoneInput.addEventListener('keyup', validatePhone);
-            
-            function validatePhone() {
-                if (phoneInput.value.trim() && iti.isValidNumber()) {
-                    phoneContainer.classList.remove('error');
+            caseNumberInput.addEventListener('input', function() {
+                if (caseNumberInput.value.trim()) {
+                    caseNumberField.classList.remove('error');
                 }
+            });
+            
+            function fetchCaseData(caseId) {
+                // Base API endpoint
+                let apiEndpoint = "https://esrirw.rw:8885/api/v1/incidents/incident";
+                
+                // Add case ID to the endpoint
+                apiEndpoint += `/${caseId}`;
+                
+                console.log("Fetching data from:", apiEndpoint); // For debugging
+                
+                // Fetch data from API
+                fetch(apiEndpoint)
+                    .then(response => {
+                        if (!response.ok) {
+                            console.error(`API responded with status: ${response.status}`);
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log("Received data:", data); // For debugging
+                        
+                        // Hide loading indicator
+                        loadingIndicator.style.display = 'none';
+                        
+                        // Process and display results
+                        processResults(data, caseId);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching case data:', error);
+                        
+                        // Hide loading indicator
+                        loadingIndicator.style.display = 'none';
+                        
+                        // Show error message
+                        resultsContainer.style.display = 'block';
+                        errorMessage.style.display = 'block';
+                    });
+            }
+            
+            // Function to process and display results
+            function processResults(data, requestedCaseId) {
+                // Show results container
+                resultsContainer.style.display = 'block';
+                
+                // Check if data is empty or null
+                if (!data || (Array.isArray(data) && data.length === 0) || (typeof data === 'object' && Object.keys(data).length === 0)) {
+                    noResultsMessage.style.display = 'block';
+                    return;
+                }
+                
+                // Normalize data to array format
+                let casesArray = Array.isArray(data) ? data : [data];
+                
+                // If a specific case ID was requested but not found in results
+                if (requestedCaseId && !casesArray.some(caseItem => caseItem.trackingCode === requestedCaseId)) {
+                    noResultsMessage.style.display = 'block';
+                    noResultsMessage.querySelector('p').textContent = `No case found with ID: ${requestedCaseId}. Please verify the case ID and try again.`;
+                    return;
+                }
+                
+                // Display each case
+                casesArray.forEach(caseItem => {
+                    const caseCard = createCaseCard(caseItem);
+                    resultsList.appendChild(caseCard);
+                });
+            }
+            
+            // Function to create a case card element
+            function createCaseCard(caseData) {
+                const card = document.createElement('div');
+                card.className = 'case-card';
+                
+                // Map status to classes
+                const statusClasses = {
+                    'PENDING': 'status-pending',
+                    'IN PROGRESS': 'status-inprogress',
+                    'RESOLVED': 'status-resolved',
+                    'CLOSED': 'status-closed'
+                };
+                
+                // Format date
+                function formatDate(dateString) {
+                    if (!dateString) return 'N/A';
+                    const date = new Date(dateString);
+                    return date.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+                }
+                
+                // Get status class
+                const statusClass = statusClasses[caseData.status] || 'status-pending';
+                
+                card.innerHTML = `
+                    <div class="case-header">
+                        <div class="case-id">Case #${caseData.trackingCode || 'Unknown'}</div>
+                        <div class="case-status ${statusClass}">${caseData.status || 'Pending'}</div>
+                    </div>
+                    <div class="case-details">
+                        <div class="detail-row">
+                            <div class="detail-label">Reported Date:</div>
+                            <div class="detail-value">${formatDate(caseData.reportedDate)}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Category:</div>
+                            <div class="detail-value">${caseData.category || 'Not specified'}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Location:</div>
+                            <div class="detail-value">${caseData.location || 'Not specified'}</div>
+                        </div>
+                        ${caseData.lastUpdated ? `
+                        <div class="detail-row">
+                            <div class="detail-label">Last Updated:</div>
+                            <div class="detail-value">${formatDate(caseData.lastUpdated)}</div>
+                        </div>
+                        ` : ''}
+                    </div>
+                    <div class="case-description">
+                        <h4>Description</h4>
+                        <p>${caseData.description || 'No description provided.'}</p>
+                    </div>
+                    ${caseData.nextSteps ? `
+                    <div class="case-next-steps">
+                        <h4>Next Steps</h4>
+                        <p>${caseData.nextSteps}</p>
+                    </div>
+                    ` : ''}
+                `;
+                
+                return card;
             }
         });
     </script>
