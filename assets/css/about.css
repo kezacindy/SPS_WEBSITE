@@ -842,21 +842,6 @@ footer::before {
     font-size: 0.9rem;
     opacity: 0.8;
 }
-/* --- Aesthetic Enhancements --- */
-body {
-    font-family: 'Poppins', sans-serif;
-}
-
-.fade-in {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 1s ease, transform 1s ease;
-}
-.fade-in.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
 
 /* Media Queries - improved for better responsiveness */
 @media (max-width: 1024px) {
