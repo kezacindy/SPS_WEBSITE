@@ -649,43 +649,52 @@
             });
             
             function fetchCaseData(caseId) {
-                // Base API endpoint
-                let apiEndpoint = "https://esrirw.rw:8885/api/v1/incidents/incident";
-                
-                // Add case ID to the endpoint
-                apiEndpoint += `/${caseId}`;
-                
-                console.log("Fetching data from:", apiEndpoint); // For debugging
-                
-                // Fetch data from API
-                fetch(apiEndpoint)
-                    .then(response => {
-                        if (!response.ok) {
-                            console.error(`API responded with status: ${response.status}`);
-                            throw new Error(`HTTP error! Status: ${response.status}`);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log("Received data:", data); // For debugging
-                        
-                        // Hide loading indicator
-                        loadingIndicator.style.display = 'none';
-                        
-                        // Process and display results
-                        processResults(data, caseId);
-                    })
-                    .catch(error => {
-                        console.error('Error fetching case data:', error);
-                        
-                        // Hide loading indicator
-                        loadingIndicator.style.display = 'none';
-                        
-                        // Show error message
-                        resultsContainer.style.display = 'block';
-                        errorMessage.style.display = 'block';
-                    });
+    // Correct API endpoint format
+    let apiEndpoint = `https://esrirw.rw:8885/api/v1/incidents/incident/${caseId}`;
+    
+    console.log("Fetching data from:", apiEndpoint);
+    
+    // Add headers if needed for authentication
+    const requestOptions = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+            // Add any required authentication headers here
+            // 'Authorization': 'Bearer YOUR_TOKEN'
+        }
+    };
+    
+    // Fetch data from API
+    fetch(apiEndpoint, requestOptions)
+        .then(response => {
+            if (!response.ok) {
+                console.error(`API responded with status: ${response.status}`);
+                throw new Error(`HTTP error! Status: ${response.status}`);
             }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Received data:", data);
+            
+            // Hide loading indicator
+            loadingIndicator.style.display = 'none';
+            
+            // Process and display results
+            processResults(data, caseId);
+        })
+        .catch(error => {
+            console.error('Error fetching case data:', error);
+            
+            // Hide loading indicator
+            loadingIndicator.style.display = 'none';
+            
+            // Show error message with more specific details
+            resultsContainer.style.display = 'block';
+            errorMessage.style.display = 'block';
+            errorMessage.querySelector('p').textContent = 
+                `An error occurred: ${error.message}. Please check your connection and try again.`;
+        });
+}
             
             // Function to process and display results
             function processResults(data, requestedCaseId) {
