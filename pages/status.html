@@ -143,28 +143,28 @@
             <div class="footer-column">
                 <h3 class="translate" data-en="Emergency Numbers" data-fr="Numéros d'Urgence">Emergency Numbers</h3>
                 <div class="emergency-grid">
-                    <div class="emergency-number">
+                    <div class="emergency-number police">
                         <i class="fas fa-phone-alt"></i>
                         <div>
                             <span class="translate" data-en="Police" data-fr="Police">Police</span>
                             <p>112</p>
                         </div>
                     </div>
-                    <div class="emergency-number">
+                    <div class="emergency-number ambulance">
                         <i class="fas fa-ambulance"></i>
                         <div>
                             <span class="translate" data-en="Ambulance" data-fr="Ambulance">Ambulance</span>
                             <p>912</p>
                         </div>
                     </div>
-                    <div class="emergency-number">
+                    <div class="emergency-number fire">
                         <i class="fas fa-fire-extinguisher"></i>
                         <div>
                             <span class="translate" data-en="Fire" data-fr="Incendie">Fire</span>
                             <p>111</p>
                         </div>
                     </div>
-                    <div class="emergency-number">
+                    <div class="emergency-number helpline">
                         <i class="fas fa-info-circle"></i>
                         <div>
                             <span class="translate" data-en="Info" data-fr="Info">Info</span>
@@ -648,56 +648,56 @@
                 }
             });
             
-            function fetchCaseData(caseId) {
-    // Correct API endpoint format
-    let apiEndpoint = `https://esrirw.rw:8885/api/v1/incidents/incident/${caseId}`;
-    
-    console.log("Fetching data from:", apiEndpoint);
-    
-    // Add headers if needed for authentication
-    const requestOptions = {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-            // Add any required authentication headers here
-            // 'Authorization': 'Bearer YOUR_TOKEN'
-        }
-    };
-    
-    // Fetch data from API
-    fetch(apiEndpoint, requestOptions)
-        .then(response => {
-            if (!response.ok) {
-                console.error(`API responded with status: ${response.status}`);
-                throw new Error(`HTTP error! Status: ${response.status}`);
+            function fetchCaseData(trackingCode) {
+                // API endpoint
+                let apiEndpoint = `https://esrirw.rw:8885/api/v1/incidents/incident/${trackingCode}`;
+                
+                console.log("Fetching data from:", apiEndpoint);
+                
+                // Add headers if needed for authentication
+                const requestOptions = {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                        // Add any required authentication headers here
+                        // 'Authorization': 'Bearer YOUR_TOKEN'
+                    }
+                };
+                
+                // Fetch data from API
+                fetch(apiEndpoint, requestOptions)
+                    .then(response => {
+                        if (!response.ok) {
+                            console.error(`API responded with status: ${response.status}`);
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log("Received data:", data);
+                        
+                        // Hide loading indicator
+                        loadingIndicator.style.display = 'none';
+                        
+                        // Process and display results
+                        processResults(data, trackingCode);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching case data:', error);
+                        
+                        // Hide loading indicator
+                        loadingIndicator.style.display = 'none';
+                        
+                        // Show error message with more specific details
+                        resultsContainer.style.display = 'block';
+                        errorMessage.style.display = 'block';
+                        errorMessage.querySelector('p').textContent = 
+                            `An error occurred: ${error.message}. Please check your connection and try again.`;
+                    });
             }
-            return response.json();
-        })
-        .then(data => {
-            console.log("Received data:", data);
-            
-            // Hide loading indicator
-            loadingIndicator.style.display = 'none';
-            
-            // Process and display results
-            processResults(data, caseId);
-        })
-        .catch(error => {
-            console.error('Error fetching case data:', error);
-            
-            // Hide loading indicator
-            loadingIndicator.style.display = 'none';
-            
-            // Show error message with more specific details
-            resultsContainer.style.display = 'block';
-            errorMessage.style.display = 'block';
-            errorMessage.querySelector('p').textContent = 
-                `An error occurred: ${error.message}. Please check your connection and try again.`;
-        });
-}
             
             // Function to process and display results
-            function processResults(data, requestedCaseId) {
+            function processResults(data, requestedtrackingCode) {
                 // Show results container
                 resultsContainer.style.display = 'block';
                 
@@ -707,13 +707,13 @@
                     return;
                 }
                 
-                // Normalize data to array format
+                // Normalize data to array format for consistency in processing
                 let casesArray = Array.isArray(data) ? data : [data];
                 
                 // If a specific case ID was requested but not found in results
-                if (requestedCaseId && !casesArray.some(caseItem => caseItem.trackingCode === requestedCaseId)) {
+                if (requestedtrackingCode && !casesArray.some(caseItem => caseItem.id === requestedtrackingCode || caseItem.trackingCode === requestedtrackingCode)) {
                     noResultsMessage.style.display = 'block';
-                    noResultsMessage.querySelector('p').textContent = `No case found with ID: ${requestedCaseId}. Please verify the case ID and try again.`;
+                    noResultsMessage.querySelector('p').textContent = `No case found with ID: ${requestedtrackingCode}. Please verify the case ID and try again.`;
                     return;
                 }
                 
@@ -724,68 +724,151 @@
                 });
             }
             
-            // Function to create a case card element
-            function createCaseCard(caseData) {
-                const card = document.createElement('div');
-                card.className = 'case-card';
-                
-                // Map status to classes
-                const statusClasses = {
-                    'PENDING': 'status-pending',
-                    'IN PROGRESS': 'status-inprogress',
-                    'RESOLVED': 'status-resolved',
-                    'CLOSED': 'status-closed'
-                };
-                
-                // Format date
-                function formatDate(dateString) {
-                    if (!dateString) return 'N/A';
-                    const date = new Date(dateString);
-                    return date.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
-                }
-                
-                // Get status class
-                const statusClass = statusClasses[caseData.status] || 'status-pending';
-                
-                card.innerHTML = `
-                    <div class="case-header">
-                        <div class="case-id">Case #${caseData.trackingCode || 'Unknown'}</div>
-                        <div class="case-status ${statusClass}">${caseData.status || 'Pending'}</div>
-                    </div>
-                    <div class="case-details">
-                        <div class="detail-row">
-                            <div class="detail-label">Reported Date:</div>
-                            <div class="detail-value">${formatDate(caseData.reportedDate)}</div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">Category:</div>
-                            <div class="detail-value">${caseData.category || 'Not specified'}</div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">Location:</div>
-                            <div class="detail-value">${caseData.location || 'Not specified'}</div>
-                        </div>
-                        ${caseData.lastUpdated ? `
-                        <div class="detail-row">
-                            <div class="detail-label">Last Updated:</div>
-                            <div class="detail-value">${formatDate(caseData.lastUpdated)}</div>
-                        </div>
-                        ` : ''}
-                    </div>
-                    <div class="case-description">
-                        <h4>Description</h4>
-                        <p>${caseData.description || 'No description provided.'}</p>
-                    </div>
-                    ${caseData.nextSteps ? `
-                    <div class="case-next-steps">
-                        <h4>Next Steps</h4>
-                        <p>${caseData.nextSteps}</p>
-                    </div>
-                    ` : ''}
-                `;
-                
-                return card;
-            }
+   // Function to create a case card element - Updated to include conditional "Assigned to" field
+function createCaseCard(caseData) {
+    const card = document.createElement('div');
+    card.className = 'case-card';
+    
+    // Get case ID (either id or trackingCode from API)
+    const trackingCode = caseData.trackingCode || caseData.trackingCode || 'Unknown';
+    
+    // Get status and map to appropriate class
+    const status = caseData.status || 'PENDING';
+    const statusMap = {
+        'PENDING': 'status-pending',
+        'IN_PROGRESS': 'status-inprogress',
+        'INPROGRESS': 'status-inprogress',
+        'IN PROGRESS': 'status-inprogress',
+        'RESOLVED': 'status-resolved',
+        'CLOSED': 'status-closed'
+    };
+    const statusClass = statusMap[status.toUpperCase()] || 'status-pending';
+    
+    // Format status for display
+    const displayStatus = status.replace('_', ' ');
+    
+    // Format date function
+    function formatDate(dateString) {
+        if (!dateString) return 'N/A';
+        const date = new Date(dateString);
+        return date.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+    
+    // Build card HTML - modified status title to be closer to status box
+    let cardHTML = `
+     <div class="case-header">
+         <div class="case-id">Case ${trackingCode}</div>
+         <div class="status-wrapper" style="display:flex; align-items:center;">
+             <span style="margin:0; padding:0;">Status:</span><div class="case-status ${statusClass}" style="margin-left:0;">${displayStatus}</div>
+         </div>
+     </div>
+         <div class="case-details">
+    `;
+    
+    // Add date from API response with dark blue clock icon
+    if (caseData.reportedDate || caseData.createdAt || caseData.date) {
+        const dateValue = caseData.reportedDate || caseData.createdAt || caseData.date;
+        cardHTML += `
+            <div class="detail-row">
+                <div class="detail-label"><i class="fas fa-clock" style="color: #1E325C;"></i> Reported Date:</div>
+                <div class="detail-value">${formatDate(dateValue)}</div>
+            </div>
+        `;
+    }
+    
+    // Add "Assigned to" field only if status is IN_PROGRESS (or variations)
+    if ((status.toUpperCase() === 'IN_PROGRESS' || 
+         status.toUpperCase() === 'INPROGRESS' || 
+         status.toUpperCase() === 'IN PROGRESS') && 
+        caseData.department && caseData.department.name) {
+        cardHTML += `
+            <div class="detail-row">
+                <div class="detail-label"><i class="fas fa-user-shield" style="color: #1E325C;"></i> Assigned to:</div>
+                <div class="detail-value">${caseData.department.name}</div>
+            </div>
+        `;
+    }
+    
+    // Add category from API if available
+    if (caseData.category || caseData.type || caseData.incidentType) {
+        const categoryValue = caseData.category || caseData.type || caseData.incidentType;
+        cardHTML += `
+            <div class="detail-row">
+                <div class="detail-label">Category:</div>
+                <div class="detail-value">${categoryValue || 'Not specified'}</div>
+            </div>
+        `;
+    }
+    
+    if (caseData.address) {
+        // Start with the lowest level (Village)
+        let locationString = '';
+        
+        if (caseData.address.name) {
+            locationString += caseData.address.name; // Village name
+        }
+        
+        // Add Cell if available
+        if (caseData.address.parentGeoLocation?.name) {
+            locationString += ', ' + caseData.address.parentGeoLocation.name;
+        }
+        
+        // Add Sector if available
+        if (caseData.address.parentGeoLocation?.parentGeoLocation?.name) {
+            locationString += ', ' + caseData.address.parentGeoLocation.parentGeoLocation.name;
+        }
+        
+        // Add District if available
+        if (caseData.address.parentGeoLocation?.parentGeoLocation?.parentGeoLocation?.name) {
+            locationString += ', ' + caseData.address.parentGeoLocation.parentGeoLocation.parentGeoLocation.name;
+        }
+
+        // Add Province if available
+        
+        cardHTML += `
+            <div class="detail-row">
+                <div class="detail-label"><i class="fas fa-map-marker-alt" style="color: #1E325C;"></i> Location:</div>
+                <div class="detail-value">${locationString || 'Not specified'}</div>
+            </div>
+        `;
+    } else if (caseData.location || caseData.incidentLocation) {
+        // Fallback to previous implementation if address object is not available
+        const locationValue = caseData.location || caseData.incidentLocation;
+        cardHTML += `
+            <div class="detail-row">
+                <div class="detail-label"><i class="fas fa-map-marker-alt" style="color: #1E325C;"></i> Location:</div>
+                <div class="detail-value">${locationValue || 'Not specified'}</div>
+            </div>
+        `;
+    }
+    
+    
+    cardHTML += `</div>`;
+    // Add description if available
+    if (caseData.description || caseData.details || caseData.incidentDetails) {
+        const descriptionValue = caseData.description || caseData.details || caseData.incidentDetails;
+        cardHTML += `
+            <div class="case-description">
+                <h4>Description</h4>
+                <p>${descriptionValue || 'No description provided.'}</p>
+            </div>
+        `;
+    }
+    
+    // Add next steps if available
+    if (caseData.nextSteps || caseData.actions || caseData.requiredActions) {
+        const nextStepsValue = caseData.nextSteps || caseData.actions || caseData.requiredActions;
+        cardHTML += `
+            <div class="case-next-steps">
+                <h4>Next Steps</h4>
+                <p>${nextStepsValue}</p>
+            </div>
+        `;
+    }
+    
+    card.innerHTML = cardHTML;
+    return card;
+}
         });
     </script>
 

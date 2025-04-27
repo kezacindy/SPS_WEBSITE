@@ -17,6 +17,68 @@
     <!-- ArcGIS API for JavaScript -->
     <link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/themes/light/main.css">
     <script src="https://js.arcgis.com/4.27/"></script>
+    <style>
+        /* Additional styles for the new hero section */
+        .contact-hero {
+            height: 70vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(38, 43, 91, 0.95), rgba(44, 51, 103, 0.9), rgba(44, 50, 102, 0.95));
+            color: white;
+            position: relative;
+            padding: 0 20px;content: '';
+    
+        }
+        
+        .contact-content {
+            z-index: 2;
+            max-width: 800px;
+        }
+        
+        .contact-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        .contact-content p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .learn-more-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 25px;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            border-radius: 30px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+        }
+        
+        .learn-more-btn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+        
+        .learn-more-btn i {
+            margin-left: 6px;
+            transition: transform 0.3s ease;
+        }
+        
+        .learn-more-btn:hover i {
+            transform: translateY(3px);
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -35,15 +97,18 @@
     </header>
 
     <main>
+        <!-- New Contact Hero Section that matches About Us style -->
         <section class="contact-hero">
-            <div class="contact-overlay"></div>
             <div class="contact-content">
                 <h1 class="translate" data-en="Contact Us" data-fr="Contactez-nous">Contact Us</h1>
                 <p class="translate" data-en="Reach out to Smart Police Services for inquiries, feedback, or assistance" data-fr="Contactez Services de Police Intelligents pour des renseignements, des commentaires ou de l'assistance">Reach out to Smart Police Services for inquiries, feedback, or assistance</p>
+                <a href="#contact-section" class="learn-more-btn translate" data-en="Learn More" data-fr="En Savoir Plus">
+                    Learn More <i class="fas fa-chevron-down"></i>
+                </a>
             </div>
         </section>
 
-        <section class="contact-section">
+        <section class="contact-section" id="contact-section">
             <div class="section-container">
                 <div class="contact-grid">
                     <div class="map-container">
@@ -90,7 +155,6 @@
                             </div>
                             <button type="submit" class="submit-btn translate" data-en="Send Message" data-fr="Envoyer le Message">Send Message</button>
                         </form>
-                        <!-- Contact info has been removed as requested -->
                     </div>
                 </div>
             </div>
@@ -137,28 +201,28 @@
             <div class="footer-column">
                 <h3 class="translate" data-en="Emergency Numbers" data-fr="Numéros d'Urgence">Emergency Numbers</h3>
                 <div class="emergency-grid">
-                    <div class="emergency-number">
+                    <div class="emergency-number police">
                         <i class="fas fa-phone-alt"></i>
                         <div>
                             <span class="translate" data-en="Police" data-fr="Police">Police</span>
                             <p>112</p>
                         </div>
                     </div>
-                    <div class="emergency-number">
+                    <div class="emergency-number ambulance">
                         <i class="fas fa-ambulance"></i>
                         <div>
                             <span class="translate" data-en="Ambulance" data-fr="Ambulance">Ambulance</span>
                             <p>912</p>
                         </div>
                     </div>
-                    <div class="emergency-number">
+                    <div class="emergency-number fire">
                         <i class="fas fa-fire-extinguisher"></i>
                         <div>
                             <span class="translate" data-en="Fire" data-fr="Incendie">Fire</span>
                             <p>111</p>
                         </div>
                     </div>
-                    <div class="emergency-number">
+                    <div class="emergency-number helpline">
                         <i class="fas fa-info-circle"></i>
                         <div>
                             <span class="translate" data-en="Info" data-fr="Info">Info</span>
@@ -177,40 +241,134 @@
     <script src="../assets/js/language.js"></script>
     <script src="../assets/js/contact-map.js"></script>
     <script>
-        // Form submission handler
+        // Form submission handler with email functionality
         document.getElementById('contactForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            // Here you would normally handle the form submission
-            // For now, just show an alert
-            alert('Thank you for your message! We will contact you soon.');
-            this.reset();
+            
+            // Collect form data
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+            
+            // Create email content
+            const emailContent = {
+                to: "kezacindy830@gmail.com",
+                subject: `Contact Form: ${subject}`,
+                body: `
+                    Name: ${name}
+                    Email: ${email}
+                    Phone: ${phone}
+                    Subject: ${subject}
+                    
+                    Message:
+                    ${message}
+                `
+            };
+            
+            // Normally we would use a backend service here
+            // For demo purposes, we'll simulate sending the email
+            sendEmail(emailContent);
         });
 
-        // Animation for contact form
-        document.addEventListener('DOMContentLoaded', function() {
-            // Set up ScrollTrigger
-            gsap.registerPlugin(ScrollTrigger);
+        function sendEmail(emailData) {
+            // In a real implementation, this would connect to a server-side API
+            // For now, we'll simulate a successful email send after a short delay
             
-            // Animate the form and map
-            gsap.from('.contact-form-container', {
-                scrollTrigger: {
-                    trigger: '.contact-form-container',
-                    start: 'top 80%',
-                },
-                opacity: 0,
-                x: 50,
-                duration: 1
+            // Show loading state
+            showLoadingState();
+            
+            // Simulate network request
+            setTimeout(() => {
+                // Hide loading state
+                hideLoadingState();
+                
+                // Show success popup
+                showSuccessPopup();
+                
+                // Reset the form
+                document.getElementById('contactForm').reset();
+            }, 1500);
+        }
+
+        function showLoadingState() {
+            // Create and show loading overlay
+            const loadingOverlay = document.createElement('div');
+            loadingOverlay.className = 'loading-overlay';
+            loadingOverlay.innerHTML = `
+                <div class="loading-spinner"></div>
+                <p>Sending message...</p>
+            `;
+            document.body.appendChild(loadingOverlay);
+        }
+
+        function hideLoadingState() {
+            // Remove loading overlay
+            const loadingOverlay = document.querySelector('.loading-overlay');
+            if (loadingOverlay) {
+                document.body.removeChild(loadingOverlay);
+            }
+        }
+
+        function showSuccessPopup() {
+            // Create success popup
+            const popup = document.createElement('div');
+            popup.className = 'success-popup';
+            
+            // Add content to popup
+            popup.innerHTML = `
+                <div class="success-popup-content">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3>Message Sent Successfully!</h3>
+                    <p>Thank you for contacting Smart Police Services. We'll get back to you soon.</p>
+                    <button class="close-popup-btn">Close</button>
+                </div>
+            `;
+            
+            // Add popup to body
+            document.body.appendChild(popup);
+            
+            // Add animation class after a small delay (for animation effect)
+            setTimeout(() => {
+                popup.classList.add('show');
+            }, 10);
+            
+            // Close button functionality
+            popup.querySelector('.close-popup-btn').addEventListener('click', function() {
+                popup.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(popup);
+                }, 300);
             });
             
-            gsap.from('.map-container', {
-                scrollTrigger: {
-                    trigger: '.map-container',
-                    start: 'top 80%',
-                },
-                opacity: 0,
-                x: -50,
-                duration: 1
-            });
+            // Auto close after 5 seconds
+            setTimeout(() => {
+                if (document.body.contains(popup)) {
+                    popup.classList.remove('show');
+                    setTimeout(() => {
+                        if (document.body.contains(popup)) {
+                            document.body.removeChild(popup);
+                        }
+                    }, 300);
+                }
+            }, 5000);
+        }
+
+        // Smooth scroll functionality for the Learn More button
+        document.querySelector('.learn-more-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href').substring(1);
+            const targetElement = document.getElementById(targetId);
+            
+            if (targetElement) {
+                window.scrollTo({
+                    top: targetElement.offsetTop,
+                    behavior: 'smooth'
+                });
+            }
         });
     </script>
 </body>

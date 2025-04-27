@@ -1,17 +1,20 @@
-/* Contact Hero Section */
+/* Contact Hero Section - Improved with consistent styling */
 .contact-hero {
     position: relative;
-    height: 30vh; /* Keeping original height  */
+    height: 70vh; /* Updated to match your new requirement */
     background-image: url('../../assets/images/picture3.jpg');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
     display: flex;
-    align-items: center; /* Keep content centered vertically */
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
+    text-align: center;
     color: white;
     margin-bottom: 4rem;
     overflow: hidden;
+    padding: 0 20px;
 }
 
 .contact-overlay {
@@ -20,21 +23,22 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, rgba(0, 44, 119, 0.85) 0%, rgba(0, 70, 173, 0.75) 100%);
+    background: linear-gradient(135deg, rgba(26, 35, 126, 0.85), rgba(0, 0, 0, 0.8));
+    z-index: 1;
 }
 
 .contact-content {
     position: relative;
     text-align: center;
     padding: 0 2rem;
-    z-index: 1;
+    z-index: 2;
     max-width: 900px;
     width: 100%;
-    margin-top: 50px; /* Moving the content up a bit to be closer to header */
+    margin-top: 0; /* Adjusted to center content vertically */
 }
 
 .contact-content h1 {
-    font-size: 3rem;
+    font-size: 3.5rem;
     font-weight: 700;
     margin-bottom: 1rem;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
@@ -45,20 +49,49 @@
 .contact-content p {
     font-size: 1.2rem;
     max-width: 800px;
-    margin: 0 auto;
+    margin: 0 auto 2rem;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
     font-weight: 300;
     line-height: 1.6;
 }
 
-/* Contact Section */
+/* Learn More Button Styling */
+.learn-more-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 25px;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    border-radius: 30px;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    background-color: rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+}
 
+.learn-more-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.learn-more-btn i {
+    margin-left: 6px;
+    transition: transform 0.3s ease;
+}
+
+.learn-more-btn:hover i {
+    transform: translateY(3px);
+}
+
+/* Contact Section */
 .contact-section {
-    padding: 3rem 0; /* Reduced from 4rem */
+    padding: 3rem 0;
     background-color: #f8f9fa;
     position: relative;
 }
-
 
 .contact-section::before {
     content: '';
@@ -72,7 +105,7 @@
 }
 
 .section-container {
-    max-width: 1400px ;
+    max-width: 1400px;
     margin: 0 auto;
     padding: 0 2rem;
 }
@@ -89,7 +122,7 @@
     border-radius: 12px;
     padding: 1.5rem;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-    height: auto; /* Changed from 100% to auto */
+    height: auto;
 }
 
 .map-container h2 {
@@ -102,7 +135,7 @@
 
 #esriMap {
     width: 100%;
-    height: 600px; /* Reduced from 400px to make it shorter */
+    height: 600px;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
@@ -114,7 +147,7 @@
     border-radius: 12px;
     padding: 1.5rem;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-    height: auto; /* Added to match map container */
+    height: auto;
 }
 
 .contact-form-container h2 {
@@ -126,7 +159,7 @@
 }
 
 .contact-form {
-    margin-bottom: 0; /* Removed margin since contact info is being removed */
+    margin-bottom: 0;
 }
 
 .form-group {
@@ -182,7 +215,7 @@
 }
 
 .textarea-container textarea {
-    min-height: 80px; /* Reduced from 100px */
+    min-height: 80px;
 }
 
 .submit-btn {
@@ -210,6 +243,125 @@
     transform: translateY(0);
 }
 
+/* Loading overlay styles */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    color: white;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+    margin-bottom: 15px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Success popup styles */
+.success-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.success-popup.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.success-popup-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 450px;
+    width: 90%;
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+    transform: translateY(20px);
+    opacity: 0;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+    animation: popup-appear 0.5s forwards;
+}
+
+@keyframes popup-appear {
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.success-icon {
+    font-size: 60px;
+    color: #4CAF50;
+    margin-bottom: 15px;
+    animation: scale-in 0.5s ease forwards;
+}
+
+@keyframes scale-in {
+    0% {
+        transform: scale(0);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.success-popup h3 {
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 24px;
+}
+
+.success-popup p {
+    color: #666;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.close-popup-btn {
+    background-color: rgb(4, 9, 169);
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.close-popup-btn:hover {
+    background-color: rgb(39, 44, 206);
+}
+
 /* Responsive design */
 @media (max-width: 992px) {
     .contact-grid {
@@ -231,7 +383,7 @@
 
 @media (max-width: 768px) {
     .contact-hero {
-        height: 25vh;
+        height: 60vh;
     }
     
     .contact-content h1 {
@@ -253,7 +405,7 @@
 
 @media (max-width: 480px) {
     .contact-hero {
-        height: 20vh;
+        height: 50vh;
     }
     
     .contact-content h1 {

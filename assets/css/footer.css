@@ -97,6 +97,23 @@ footer {
     font-size: 1rem;
 }
 
+/*Custom hover colors for emergency numbers*/
+.emergency-number.police:hover {
+    background-color: #3b5998;
+}
+
+.emergency-number.ambulance:hover {
+    background-color: orangered;
+}
+
+.emergency-number.fire:hover {
+    background-color: firebrick;
+}
+
+.emergency-number.helpline:hover {
+    background-color: #2E8B57;
+}
+
 .copyright {
     text-align: center;
     padding: 1rem 0;
@@ -123,6 +140,7 @@ footer {
     .emergency-grid {
         grid-template-columns: 1fr 1fr;
     }
+    
 }
 
 @media (max-width: 480px) {
